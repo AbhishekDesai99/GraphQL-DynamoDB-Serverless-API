@@ -1,0 +1,58 @@
+service: UserData-GraphQl-DynamoDB
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: ap-south-1
+  memorySize: 128
+
+functions:
+  queryHandler:
+    handler: queryHandler.handler
+    role: !GetAtt lambdaServiceRole.Arn
+    events:
+      - http:
+          path: /user
+          method: get
+    environment:
+      TableName: User
+      region: !Ref AWS::Region
+    
+resources:
+  Resources:
+    lambdaServiceRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: !Ref AWS::StackName
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: !Join ['-', ['Cloudwatch', {Ref: AWS::StackName}, 'Policy']]
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: logs:*
+                  Resource:
+                    - !Join  ['', ['arn:aws:logs:', {Ref: "AWS::Region"}, ':', {Ref: "AWS::AccountId"}, ':*']]
+          - PolicyName: !Join ['-', ['DynamoDB', {Ref: AWS::StackName}, 'Policy']]
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: 
+                    - dynamodb:GetItem
+                    - dynamodb:UpdateItem
+                  Resource:
+                    - !Join  ['', ['arn:aws:dynamodb:', {Ref: "AWS::Region"}, ':', {Ref: "AWS::AccountId"}, ':table/User']]
+
+
+          
+
