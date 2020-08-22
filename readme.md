@@ -42,9 +42,15 @@ Create item inside your DynamoDb 'User' table, ex.
 }
 
 
+#Deployment
 deploy the stack using
 sls deploy
 
-grab the api gateway url from the deployment output, and that's it! pretty simple.
-you can check it by 
+
+grab the api gateway url from the deployment output,
+and that's it! pretty simple.
+
+
+#testing
+You can check it by 
 curl "your API gateway endpoint url"/id=someValue
