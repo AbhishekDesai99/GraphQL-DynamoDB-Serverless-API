@@ -5,17 +5,19 @@ const createRes = (statusCode, body) => {
       };
 }
 
-const createObject = (object) => {
-    let myObject = new Object()
-    const keys = Object.keys(object)
-    keys.map(key => {
-        myObject[key] = object[key]
-    })
-    return myObject
-}
-
-const queryBuilder = (queryModel, queryInputKey, queryInputValue, responseFields) => {
-    let query = `{${queryModel}(${queryInputKey}: ${queryInputValue}){`
+const queryBuilder = (queryModel, responseFields, queryInput = null) => {
+    let query
+    
+    if(!queryInput) query = `{${queryModel} {`
+    else {
+        query = `{${queryModel}(` 
+        Object.keys(queryInput).map(key => {
+            query += `${key}: ${queryInput[key]},`
+        })
+        query = query.substr(0, query.length-1)
+        query += '){'
+    } 
+    
     responseFields.map(field => {
         query += ` ${field}`
     })
@@ -25,8 +27,5 @@ const queryBuilder = (queryModel, queryInputKey, queryInputValue, responseFields
 
 module.exports = {
     createRes,
-    createObject,
     queryBuilder
 }
-
-// console.log(queryBuilder('user', 'id',  9, ['id', 'firstName']))

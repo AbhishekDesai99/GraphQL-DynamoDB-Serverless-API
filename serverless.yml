@@ -50,6 +50,7 @@ resources:
                   Action: 
                     - dynamodb:GetItem
                     - dynamodb:UpdateItem
+                    - dynamodb:Scan
                   Resource:
                     - !Join  ['', ['arn:aws:dynamodb:', {Ref: "AWS::Region"}, ':', {Ref: "AWS::AccountId"}, ':table/User']]
 

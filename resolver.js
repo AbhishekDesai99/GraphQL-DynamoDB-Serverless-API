@@ -1,5 +1,5 @@
 const { DocumentClient } = require('aws-sdk/clients/dynamodb') //DynamoDB client from aws-sdk
-const docClient = new DocumentClient({ region: 'ap-south-1', accessKeyId: 'AKIASBSJSB3P5CKZ3C77', secretAccessKey: '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'})
+const docClient = new DocumentClient()
 
 module.exports.resolvers = {
     user: async ({ id}) => {
@@ -11,5 +11,12 @@ module.exports.resolvers = {
         }).promise()
         if(!data.Item) return {}
         else return data.Item
+    },
+    users: async () => {
+        let data = await docClient.scan({
+            TableName: 'User',
+        }).promise()
+        return data.Items
     }
 }
+

@@ -10,6 +10,7 @@ module.exports.schema = buildSchema(`
     }
 
     type Query {
+        users: [User]
         user(id: Int!): User
     }
 `)
